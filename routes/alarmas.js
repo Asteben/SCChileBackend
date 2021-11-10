@@ -23,7 +23,7 @@ router.post("/crearAlarma", async (req, res) => {
         });
     }
     else{
-        pool.query('INSERT INTO alarma (vecino_idvecino, guardia_idguardia, fecha, estado) VALUES ($1, $2, $3, $4)', [idvecino, idguardia, moment().format("YYYY-MM-DD HH:mm:ss"), 'activa'],async (err, rows) => {
+        pool.query('INSERT INTO alarma (vecino_idvecino, fecha, estado) VALUES ($1, $2, $3)', [idvecino , moment().format("YYYY-MM-DD HH:mm:ss"), 'activa'],async (err, rows) => {
             if (!err) {
                 res.send({
                     code: 200,
@@ -149,7 +149,7 @@ router.post("/confirmarAlarma", async (req, res) => {
     }
 });
 
-router.post("/confirmarAlarma", async (req, res) => {
+router.post("/terminarAlarma", async (req, res) => {
     const { idguardia, idalarma, comentario } = req.body;
     const aux = 0;
     pool.query('SELECT idguardia FROM guardia WHERE idguardia = ($1)', [idguardia], async (err, rows) => {
@@ -179,5 +179,58 @@ router.post("/confirmarAlarma", async (req, res) => {
             }
         });
     }
+});
+
+router.get("/getHistAlarm/:idguardia", async (req, res) => {
+    const idguardia = req.params;
+    const aux = 0;
+    pool.query('SELECT idguardia FROM guardia WHERE idguardia = ($1)', [idguardia], async (err, rows) => {
+        if (rows.rowCount > 0 ){
+            res.send({
+                code: 400,
+                message: "Ha ocurrido un error inesperado, hable con el administrador",
+            });
+            aux = 1;
+        }
+    });
+    if(aux === 0){
+        pool.query('SELECT * FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
+            if (!err) {
+                res.send({
+                    code: 200,
+                    message: "Alarmas activas y confirmadas retornadas exitosamente",
+                    rows
+                });
+                console.log("Alarmas activas y confirmadas retornadas exitosamente");
+                console.log(rows);
+            } else {
+                res.send({
+                    code: 400,
+                    msg: "Hable con el administrador",
+                });
+                console.log(err);
+            }
+        });
+    }
+});
+
+router.get("/AlarmasActivas", async (req, res) => {
+    pool.query('SELECT * FROM alarma WHERE estado = ($1) ORDER BY idalarma', ['activa'],async (err, rows) => {
+        if (!err) {
+            res.send({
+                code: 200,
+                message: "Alarmas activas retornadas exitosamente",
+                rows
+            });
+            console.log("Alarmas activas retornadas exitosamente");
+            console.log(rows);
+        } else {
+            res.send({
+                code: 400,
+                msg: "Hable con el administrador",
+            });
+            console.log(err);
+        }
+    });
 });
 module.exports = router;
