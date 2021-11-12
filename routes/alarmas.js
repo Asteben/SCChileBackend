@@ -43,7 +43,7 @@ router.post("/crearAlarma", async (req, res) => {
 });
 
 router.get("/getAlarmas", async (req, res) => {
-    pool.query('SELECT alarma.* FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1) OR alarma.estado = ($2)) ORDER BY alarma.idalarma', ['activa', 'confirmada'],async (err, rows) => {
+    pool.query('SELECT alarma.*, vecino.telefono FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1) OR alarma.estado = ($2)) ORDER BY alarma.idalarma', ['activa', 'confirmada'],async (err, rows) => {
         if (!err) {
             res.send({
                 code: 200,
@@ -63,7 +63,7 @@ router.get("/getAlarmas", async (req, res) => {
 });
 
 router.get("/getHistAlarm", async (req, res) => {
-    pool.query('SELECT alarma.* FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
+    pool.query('SELECT alarma.*, vecino.telefono FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
         if (!err) {
             res.send({
                 code: 200,
