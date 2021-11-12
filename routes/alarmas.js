@@ -45,15 +45,6 @@ router.post("/crearAlarma", async (req, res) => {
 router.get("/getAlarmas/:idguardia", async (req, res) => {
     const idguardia = req.params;
     const aux = 0;
-    pool.query('SELECT idguardia FROM guardia WHERE idguardia = ($1)', [idguardia], async (err, rows) => {
-        if (rows.rowCount > 0 ){
-            res.send({
-                code: 400,
-                message: "Ha ocurrido un error inesperado, hable con el administrador",
-            });
-            aux = 1;
-        }
-    });
     if(aux === 0){
         pool.query('SELECT * FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1) OR alarma.estado = ($2)) ORDER BY alarma.idalarma', ['activa', 'confirmada'],async (err, rows) => {
             if (!err) {
@@ -78,15 +69,6 @@ router.get("/getAlarmas/:idguardia", async (req, res) => {
 router.get("/getHistAlarm/:idguardia", async (req, res) => {
     const idguardia = req.params;
     const aux = 0;
-    pool.query('SELECT idguardia FROM guardia WHERE idguardia = ($1)', [idguardia], async (err, rows) => {
-        if (rows.rowCount > 0 ){
-            res.send({
-                code: 400,
-                message: "Ha ocurrido un error inesperado, hable con el administrador",
-            });
-            aux = 1;
-        }
-    });
     if(aux === 0){
         pool.query('SELECT * FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
             if (!err) {
@@ -111,24 +93,6 @@ router.get("/getHistAlarm/:idguardia", async (req, res) => {
 router.post("/confirmarAlarma", async (req, res) => {
     const { idguardia, idalarma } = req.body;
     const aux = 0;
-    pool.query('SELECT idguardia FROM guardia WHERE idguardia = ($1)', [idguardia], async (err, rows) => {
-        if (rows.rowCount > 0 ){
-            res.send({
-                code: 400,
-                message: "Ha ocurrido un error inesperado, hable con el administrador",
-            });
-            aux = 1;
-        }
-    });
-    pool.query('SELECT guardia_idguardia FROM alarma WHERE idalarma = ($1)', [idalarma], async (err, rows) => {
-        if (rows.rowCount > 0 ){
-            res.send({
-                code: 400,
-                message: "La alarma ya contiene un guardia vinculado",
-            });
-            aux = 1;
-        }
-    });
     if(aux === 0){
         pool.query('UPDATE alarma SET guardia_idguardia = ($1), estado = ($2) WHERE idalarma = ($3)', [idguardia, 'confirmada', idalarma],async (err, rows) => {
             if (!err) {
@@ -152,15 +116,6 @@ router.post("/confirmarAlarma", async (req, res) => {
 router.post("/terminarAlarma", async (req, res) => {
     const { idguardia, idalarma, comentario } = req.body;
     const aux = 0;
-    pool.query('SELECT idguardia FROM guardia WHERE idguardia = ($1)', [idguardia], async (err, rows) => {
-        if (rows.rowCount > 0 ){
-            res.send({
-                code: 400,
-                message: "Ha ocurrido un error inesperado, hable con el administrador",
-            });
-            aux = 1;
-        }
-    });
     if(aux === 0){
         pool.query('UPDATE alarma SET estado = ($1), comentario = ($2) WHERE idalarma = ($3)', ['terminada', comentario, idalarma],async (err, rows) => {
             if (!err) {
@@ -184,15 +139,6 @@ router.post("/terminarAlarma", async (req, res) => {
 router.get("/getHistAlarm/:idguardia", async (req, res) => {
     const idguardia = req.params;
     const aux = 0;
-    pool.query('SELECT idguardia FROM guardia WHERE idguardia = ($1)', [idguardia], async (err, rows) => {
-        if (rows.rowCount > 0 ){
-            res.send({
-                code: 400,
-                message: "Ha ocurrido un error inesperado, hable con el administrador",
-            });
-            aux = 1;
-        }
-    });
     if(aux === 0){
         pool.query('SELECT * FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
             if (!err) {
