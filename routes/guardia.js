@@ -64,4 +64,26 @@ router.delete("/guardia/:idguardia", async (req, res) => {
     });
 });
 
+router.post("/guardia/nuevo", async (req, res) => {
+    const {idguardia, nombre, email, password, rut, tipo} = req.body;
+    const salt = bcrypt.genSaltSync();
+    const passwordHash = bcrypt.hashSync(password, salt);
+    pool.query('INSERT INTO guardia (idguardia, nombre, email, password, rut, tipo) VALUES ($1, $2, $3, $4, $5, $6)', [idguardia, nombre, email, passwordHash, rut, tipo], async (err, rows) => {
+        if (!err) {
+            res.send({
+                code: 200,
+                message: "Guardia nuevo ingresado exitosamente",
+            });
+            console.log("Guardia nuevo ingresado exitosamente");
+            console.log(rows);
+        } else {
+            res.send({
+                code: 400,
+                msg: "Hable con el administrador",
+            });
+            console.log(err);
+        }
+    });
+});
+
 module.exports = router;
