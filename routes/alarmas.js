@@ -63,7 +63,7 @@ router.get("/getAlarmas", async (req, res) => {
 });
 
 router.get("/getHistAlarm", async (req, res) => {
-    pool.query('SELECT * FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
+    pool.query('SELECT alarma.* FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
         if (!err) {
             res.send({
                 code: 200,
