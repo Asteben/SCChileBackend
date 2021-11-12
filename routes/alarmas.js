@@ -8,7 +8,7 @@ const pool = require('../database/config');
 
 
 router.post("/crearAlarma", async (req, res) => {
-    const idvecino = req.body;
+    const idvecino = req.body.idvecino;
     let terminar = false;
     const aux = await pool.query('SELECT estado FROM alarma WHERE vecino_idvecino = ($1)', [idvecino]);
     aux.rows.map(fila => {
@@ -43,7 +43,7 @@ router.post("/crearAlarma", async (req, res) => {
 });
 
 router.get("/getAlarmas", async (req, res) => {
-    pool.query('SELECT * FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1) OR alarma.estado = ($2)) ORDER BY alarma.idalarma', ['activa', 'confirmada'],async (err, rows) => {
+    pool.query('SELECT alarma.* FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1) OR alarma.estado = ($2)) ORDER BY alarma.idalarma', ['activa', 'confirmada'],async (err, rows) => {
         if (!err) {
             res.send({
                 code: 200,

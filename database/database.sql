@@ -42,7 +42,7 @@ alter table vecino_contacto
     on delete CASCADE;
 
 CREATE TABLE alarma(
-    idalarma VARCHAR PRIMARY KEY,
+    idalarma SERIAL PRIMARY KEY,
     vecino_idvecino VARCHAR,
     guardia_idguardia VARCHAR,
     fecha TIMESTAMP,
@@ -65,7 +65,7 @@ alter table alarma
     on delete NO ACTION;
 
 CREATE TABLE escolta(
-    idescolta VARCHAR PRIMARY KEY,
+    idescolta SERIAL PRIMARY KEY,
     vecino_idvecino VARCHAR,
     guardia_idguardia VARCHAR,
     fecha TIMESTAMP,
