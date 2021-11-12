@@ -128,24 +128,4 @@ router.get('/renew', validarJWT, async (req, res = response) => {
         token
     });
 });
-
-router.get("/guardia/all", async (req, res) => {
-    pool.query('SELECT * FROM guardia',async (err, rows) => {
-        if (!err) {
-            res.send({
-                code: 200,
-                message: "guardias retornados exitosamente",
-                rows
-            });
-            console.log("guardias retornados exitosamente");
-            console.log(rows);
-        } else {
-            res.send({
-                code: 400,
-                msg: "Hable con el administrador",
-            });
-            console.log(err);
-        }
-    });
-});
 module.exports = router;

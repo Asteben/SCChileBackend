@@ -1,7 +1,7 @@
 CREATE DATABASE "SCChileDB";
 
 CREATE TABLE guardia(
-    idguardia SERIAL PRIMARY KEY,
+    idguardia VARCHAR PRIMARY KEY,
     nombre VARCHAR,
     email VARCHAR,
     password VARCHAR,
@@ -10,7 +10,7 @@ CREATE TABLE guardia(
 );
 
 CREATE TABLE vecino(
-    idvecino SERIAL PRIMARY KEY,
+    idvecino VARCHAR PRIMARY KEY,
     direccion VARCHAR,
     password VARCHAR,
     telefono NUMERIC(9),
@@ -18,7 +18,7 @@ CREATE TABLE vecino(
 );
 
 CREATE TABLE vecino_contacto(
-    vecino_idvecino SERIAL,
+    vecino_idvecino VARCHAR,
     contacto_telefono NUMERIC(9)
 );
 
@@ -42,9 +42,9 @@ alter table vecino_contacto
     on delete CASCADE;
 
 CREATE TABLE alarma(
-    idalarma SERIAL PRIMARY KEY,
-    vecino_idvecino SERIAL,
-    guardia_idguardia SERIAL,
+    idalarma VARCHAR PRIMARY KEY,
+    vecino_idvecino VARCHAR,
+    guardia_idguardia VARCHAR,
     fecha TIMESTAMP,
     estado VARCHAR,
     comentario TEXT
@@ -65,9 +65,9 @@ alter table alarma
     on delete NO ACTION;
 
 CREATE TABLE escolta(
-    idescolta SERIAL PRIMARY KEY,
-    vecino_idvecino SERIAL,
-    guardia_idguardia SERIAL,
+    idescolta VARCHAR PRIMARY KEY,
+    vecino_idvecino VARCHAR,
+    guardia_idguardia VARCHAR,
     fecha TIMESTAMP,
     estado VARCHAR,
     direccion VARCHAR,
