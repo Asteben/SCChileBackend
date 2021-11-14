@@ -69,7 +69,7 @@ router.get("/vecino/all", async (req, res) => {
 });
 
 router.get("/vecino/:idvecino", async (req, res) => {
-    const idvecino = req.params;
+    const {idvecino} = req.params;
     pool.query('SELECT * FROM vecino WHERE idvecino = $1', [idvecino],async (err, rows) => {
         if (!err) {
             res.send({
@@ -90,7 +90,7 @@ router.get("/vecino/:idvecino", async (req, res) => {
 });
 
 router.delete("/vecino/:idvecino", async (req, res) => {
-    const idvecino = req.params;
+    const {idvecino} = req.params;
     pool.query("DELETE FROM vecino WHERE idvecino = $1", [idvecino], async (err, rows) => {
       if (!err) {
         res.send({
