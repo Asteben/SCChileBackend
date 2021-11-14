@@ -54,8 +54,8 @@ router.post("/contacto/nuevo", async (req, res) => {
 });
 
 router.post("/contacto/actualizar", async (req, res) => {
-    const {telefono, nombre} = req.body;
-    pool.query('UPDATE contacto SET telefono = $1, nombre = $2 WHERE telefono = $3',[telefono, nombre, telefono],async (err, rows) => {
+    const {telefono, nombre, telefononuevo} = req.body;
+    pool.query('UPDATE contacto SET telefono = $1, nombre = $2 WHERE telefono = $3',[telefononuevo, nombre, telefono],async (err, rows) => {
         if (!err) {
             res.send({
                 code: 200,
