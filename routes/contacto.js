@@ -74,7 +74,7 @@ router.post("/contacto/actualizar", async (req, res) => {
 });
 
 router.get("/contacto/:idvecino", async (req, res) => {
-    const idvecino = req.params;
+    const {idvecino} = req.params;
     pool.query('SELECT contacto.nombre, contacto.telefono FROM contacto INNER JOIN vecino_contacto ON contacto.telefono = vecino_contacto.contacto_telefono WHERE vecino_contacto.vecino_idvecino = $1', [idvecino],async (err, rows) => {
         if (!err) {
             res.send({
@@ -95,7 +95,7 @@ router.get("/contacto/:idvecino", async (req, res) => {
 });
 
 router.delete("/contacto/:telefono", async (req, res) => {
-    const telefono = req.params;
+    const {telefono} = req.params;
     pool.query("DELETE FROM contacto WHERE telefono = $1", [telefono], async (err, rows) => {
       if (!err) {
         res.send({
