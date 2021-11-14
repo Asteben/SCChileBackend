@@ -121,4 +121,45 @@ router.post("/terminarAlarma", async (req, res) => {
         }
     });
 });
+
+router.post("/cancelarAlarma", async (req, res) => {
+    const { idalarma } = req.body;
+    pool.query('UPDATE alarma SET estado = ($1) WHERE idalarma = ($2)', ['cancelada', idalarma],async (err, rows) => {
+        if (!err) {
+            res.send({
+                code: 200,
+                message: "alarma cancelada exitosamente",
+            });
+            console.log("alarma cancelada exitosamente");
+            console.log(rows);
+        } else {
+            res.send({
+                code: 400,
+                msg: "Hable con el administrador",
+            });
+            console.log(err);
+        }
+    });
+});
+
+router.get("/Alarma/:idvecino", async (req, res) => {
+    const {idvecino} = req.params;
+    pool.query('SELECT * FROM alarma WHERE vecino_idvecino = $1', [idvecino],async (err, rows) => {
+        if (!err) {
+            res.send({
+                code: 200,
+                message: "alarmas retornadas exitosamente",
+                rows
+            });
+            console.log("alarmas retornadas exitosamente");
+            console.log(rows);
+        } else {
+            res.send({
+                code: 400,
+                msg: "Hable con el administrador",
+            });
+            console.log(err);
+        }
+    });
+});
 module.exports = router;

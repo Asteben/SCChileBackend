@@ -28,6 +28,7 @@ app.use(require("./routes/alarmas"));
 app.use(require("./routes/vecino"));
 app.use(require("./routes/contacto"));
 app.use(require("./routes/guardia"));
+app.use(require("./routes/escoltas"));
 
 app.listen(4000, () => {
     console.log(`Servidor corriendo en puerto ${4000}`);
