@@ -87,3 +87,17 @@ alter table escolta
     references vecino(idvecino)
     on update CASCADE
     on delete NO ACTION;
+
+CREATE TABLE hito(
+    idhito SERIAL PRIMARY KEY,
+    alarma_idalarma SERIAL,
+    fecha TIMESTAMP,
+    texto TEXT
+);
+
+alter table hito
+    add constraint FK_hito_alarma
+    foreign key (alarma_idalarma)
+    references alarma(idalarma)
+    on update CASCADE
+    on delete NO ACTION;
