@@ -8,7 +8,7 @@ const pool = require('../database/config');
 
 router.post("/contacto/nuevo", async (req, res) => {
     const {idvecino, nombre, telefono} = req.body;
-    const aux2 = 0;
+    let aux2 = 0;
     const aux = await pool.query('SELECT telefono FROM contacto WHERE telefono = ($1)', [telefono]);
     console.log(aux.rowCount)
     if (!aux.rowCount){
