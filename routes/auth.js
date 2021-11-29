@@ -1,6 +1,7 @@
 require('dotenv').config();
 const { response } = require('express');
 const bcrypt = require('bcryptjs');
+const moment = require('moment');
 const express = require("express");
 const router = express.Router();
 
@@ -34,10 +35,24 @@ router.post('/',async (req, res = response) => {
         }
         // Generar JWT
         const token = await generarJWT(id);
-        return res.status(200).json({
-            ok: true,
-            id,
-            token
+        pool.query('INSERT INTO logs (guardia_idguardia, fecha, nombre) VALUES ($1, $2, (SELECT nombre FROM guardia WHERE idguardia = $3) )', [id, moment().format("YYYY-MM-DD HH:mm:ss"), id], async (err, rows) => {
+            if (!err) {
+                res.send({
+                    ok: true,
+                    id,
+                    token,
+                    code: 200,
+                    message: "Guardia nuevo ingresado exitosamente",
+                });
+                console.log("Guardia nuevo ingresado exitosamente");
+                console.log(rows);
+            } else {
+                res.send({
+                    code: 400,
+                    msg: "Hable con el administrador",
+                });
+                console.log(err);
+            }
         });
     } catch (error) {
         console.log(error);

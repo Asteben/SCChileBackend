@@ -101,3 +101,17 @@ alter table hito
     references alarma(idalarma)
     on update CASCADE
     on delete NO ACTION;
+
+CREATE TABLE logs(
+    idlog SERIAL PRIMARY KEY,
+    nombre VARCHAR,
+    fecha TIMESTAMP,
+    guardia_idguardia VARCHAR
+);
+
+alter table logs
+    add constraint FK_logs_guardia
+    foreign key (guardia_idguardia)
+    references guardia(idguardia)
+    on update CASCADE
+    on delete NO ACTION;
