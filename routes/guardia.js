@@ -4,9 +4,10 @@ const bcrypt = require('bcryptjs');
 const express = require("express");
 const router = express.Router();
 
+const { validarJWT } = require('../middlewares/validar-jwt');
 const pool = require('../database/config');
 
-router.post("/guardia/actualizar", async (req, res) => {
+router.post("/guardia/actualizar", validarJWT, async (req, res) => {
     const { direccion, telefono, idvecino} = req.body;
     pool.query('UPDATE vecino SET direccion = $1, telefono = $2 WHERE idguardia = $3',[direccion, telefono, idvecino],async (err, rows) => {
         if (!err) {
@@ -26,7 +27,7 @@ router.post("/guardia/actualizar", async (req, res) => {
     });
 });
 
-router.get("/guardia/all", async (req, res) => {
+router.get("/guardia/all", validarJWT , async (req, res) => {
     pool.query('SELECT * FROM guardia',async (err, rows) => {
         if (!err) {
             res.send({
@@ -46,7 +47,7 @@ router.get("/guardia/all", async (req, res) => {
     });
 });
 
-router.delete("/guardia/:idguardia", async (req, res) => {
+router.delete("/guardia/:idguardia", validarJWT, async (req, res) => {
     const idguardia = req.params;
     pool.query("DELETE FROM guardia WHERE idguardia = $1", [idvecino], async (err, rows) => {
       if (!err) {
@@ -64,7 +65,7 @@ router.delete("/guardia/:idguardia", async (req, res) => {
     });
 });
 
-router.post("/guardia/nuevo", async (req, res) => {
+router.post("/guardia/nuevo", validarJWT, async (req, res) => {
     const {idguardia, nombre, email, password, rut, tipo} = req.body;
     const salt = bcrypt.genSaltSync();
     const passwordHash = bcrypt.hashSync(password, salt);

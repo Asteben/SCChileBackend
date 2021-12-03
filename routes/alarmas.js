@@ -4,10 +4,11 @@ const moment = require('moment');
 const express = require("express");
 const router = express.Router();
 
+const { validarJWT } = require('../middlewares/validar-jwt');
 const pool = require('../database/config');
 
 
-router.post("/crearAlarma", async (req, res) => {
+router.post("/crearAlarma", validarJWT, async (req, res) => {
     const idvecino = req.body.idvecino;
     let terminar = false;
     const aux = await pool.query('SELECT estado FROM alarma WHERE vecino_idvecino = ($1)', [idvecino]);
@@ -42,7 +43,7 @@ router.post("/crearAlarma", async (req, res) => {
     }
 });
 
-router.get("/getAlarmas", async (req, res) => {
+router.get("/getAlarmas", validarJWT, async (req, res) => {
     pool.query('SELECT alarma.*, vecino.telefono FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1) OR alarma.estado = ($2)) ORDER BY alarma.idalarma', ['activa', 'confirmada'],async (err, rows) => {
         if (!err) {
             res.send({
@@ -62,7 +63,7 @@ router.get("/getAlarmas", async (req, res) => {
     });
 });
 
-router.get("/getHistAlarm", async (req, res) => {
+router.get("/getHistAlarm", validarJWT, async (req, res) => {
     pool.query('SELECT alarma.*, vecino.telefono FROM alarma, vecino WHERE alarma.vecino_idvecino = vecino.idvecino AND (alarma.estado = ($1)) ORDER BY alarma.idalarma', ['terminada'],async (err, rows) => {
         if (!err) {
             res.send({
@@ -82,7 +83,7 @@ router.get("/getHistAlarm", async (req, res) => {
     });
 });
 
-router.post("/confirmarAlarma", async (req, res) => {
+router.post("/confirmarAlarma", validarJWT, async (req, res) => {
     const { idguardia, idalarma } = req.body;
     pool.query('UPDATE alarma SET guardia_idguardia = ($1), estado = ($2) WHERE idalarma = ($3)', [idguardia, 'confirmada', idalarma],async (err, rows) => {
         if (!err) {
@@ -102,7 +103,7 @@ router.post("/confirmarAlarma", async (req, res) => {
     });
 });
 
-router.post("/terminarAlarma", async (req, res) => {
+router.post("/terminarAlarma", validarJWT, async (req, res) => {
     const { idalarma, comentario } = req.body;
     pool.query('UPDATE alarma SET estado = ($1), comentario = ($2) WHERE idalarma = ($3)', ['terminada', comentario, idalarma],async (err, rows) => {
         if (!err) {
@@ -122,7 +123,7 @@ router.post("/terminarAlarma", async (req, res) => {
     });
 });
 
-router.post("/cancelarAlarma", async (req, res) => {
+router.post("/cancelarAlarma", validarJWT, async (req, res) => {
     const { idalarma } = req.body;
     pool.query('UPDATE alarma SET estado = ($1) WHERE idalarma = ($2)', ['cancelada', idalarma],async (err, rows) => {
         if (!err) {
@@ -142,7 +143,7 @@ router.post("/cancelarAlarma", async (req, res) => {
     });
 });
 
-router.get("/Alarma/:idvecino", async (req, res) => {
+router.get("/Alarma/:idvecino", validarJWT, async (req, res) => {
     const {idvecino} = req.params;
     pool.query('SELECT * FROM alarma WHERE vecino_idvecino = $1', [idvecino],async (err, rows) => {
         if (!err) {

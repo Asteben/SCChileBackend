@@ -4,10 +4,11 @@ const moment = require('moment');
 const express = require("express");
 const router = express.Router();
 
+const { validarJWT } = require('../middlewares/validar-jwt');
 const pool = require('../database/config');
 
 
-router.post("/crearEscolta", async (req, res) => {
+router.post("/crearEscolta", validarJWT, async (req, res) => {
     const {idvecino, direccion, modalidad} = req.body;
     let terminar = false;
     const aux = await pool.query('SELECT estado FROM escolta WHERE vecino_idvecino = ($1)', [idvecino]);
@@ -42,7 +43,7 @@ router.post("/crearEscolta", async (req, res) => {
     }
 });
 
-router.get("/getEscoltas", async (req, res) => {
+router.get("/getEscoltas", validarJWT, async (req, res) => {
     pool.query('SELECT escolta.*, vecino.telefono FROM escolta, vecino WHERE escolta.vecino_idvecino = vecino.idvecino AND (escolta.estado = ($1) OR escolta.estado = ($2)) ORDER BY escolta.idescolta', ['activa', 'confirmada'],async (err, rows) => {
         if (!err) {
             res.send({
@@ -62,7 +63,7 @@ router.get("/getEscoltas", async (req, res) => {
     });
 });
 
-router.get("/getHistEscoltas", async (req, res) => {
+router.get("/getHistEscoltas", validarJWT, async (req, res) => {
     pool.query('SELECT escolta.*, vecino.telefono FROM escolta, vecino WHERE escolta.vecino_idvecino = vecino.idvecino AND (escolta.estado = ($1)) ORDER BY escolta.idescolta', ['terminada'],async (err, rows) => {
         if (!err) {
             res.send({
@@ -82,7 +83,7 @@ router.get("/getHistEscoltas", async (req, res) => {
     });
 });
 
-router.post("/confirmarEscolta", async (req, res) => {
+router.post("/confirmarEscolta", validarJWT, async (req, res) => {
     const { idguardia, idescolta } = req.body;
     pool.query('UPDATE escolta SET guardia_idguardia = ($1), estado = ($2) WHERE idescolta = ($3)', [idguardia, 'confirmada', idescolta],async (err, rows) => {
         if (!err) {
@@ -102,7 +103,7 @@ router.post("/confirmarEscolta", async (req, res) => {
     });
 });
 
-router.post("/terminarEscolta", async (req, res) => {
+router.post("/terminarEscolta", validarJWT, async (req, res) => {
     const { idescolta } = req.body;
     pool.query('UPDATE escolta SET estado = ($1) WHERE idescolta = ($2)', ['terminada', idescolta],async (err, rows) => {
         if (!err) {
@@ -122,7 +123,7 @@ router.post("/terminarEscolta", async (req, res) => {
     });
 });
 
-router.post("/cancelarEscolta", async (req, res) => {
+router.post("/cancelarEscolta", validarJWT, async (req, res) => {
     const { idescolta } = req.body;
     pool.query('UPDATE escolta SET estado = ($1) WHERE idescolta = ($2)', ['cancelada', idescolta],async (err, rows) => {
         if (!err) {
@@ -142,7 +143,7 @@ router.post("/cancelarEscolta", async (req, res) => {
     });
 });
 
-router.get("/Escolta/:idvecino", async (req, res) => {
+router.get("/Escolta/:idvecino", validarJWT, async (req, res) => {
     const {idvecino} = req.params;
     pool.query('SELECT * FROM escolta WHERE vecino_idvecino = $1', [idvecino],async (err, rows) => {
         if (!err) {

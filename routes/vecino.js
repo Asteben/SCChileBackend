@@ -4,9 +4,10 @@ const bcrypt = require('bcryptjs');
 const express = require("express");
 const router = express.Router();
 
+const { validarJWT } = require('../middlewares/validar-jwt');
 const pool = require('../database/config');
 
-router.post("/vecino/nuevo", async (req, res) => {
+router.post("/vecino/nuevo", validarJWT, async (req, res) => {
     const {idvecino, direccion, telefono, password} = req.body;
     const salt = bcrypt.genSaltSync();
     const passwordHash = bcrypt.hashSync(password, salt);
@@ -28,7 +29,7 @@ router.post("/vecino/nuevo", async (req, res) => {
     });
 });
 
-router.post("/vecino/actualizar", async (req, res) => {
+router.post("/vecino/actualizar", validarJWT, async (req, res) => {
     const { direccion, telefono, idvecino} = req.body;
     pool.query('UPDATE vecino SET direccion = $1, telefono = $2 WHERE idvecino = $3',[direccion, telefono, idvecino],async (err, rows) => {
         if (!err) {
@@ -48,7 +49,7 @@ router.post("/vecino/actualizar", async (req, res) => {
     });
 });
 
-router.get("/vecino/all", async (req, res) => {
+router.get("/vecino/all", validarJWT, async (req, res) => {
     pool.query('SELECT * FROM vecino',async (err, rows) => {
         if (!err) {
             res.send({
@@ -68,7 +69,7 @@ router.get("/vecino/all", async (req, res) => {
     });
 });
 
-router.get("/vecino/:idvecino", async (req, res) => {
+router.get("/vecino/:idvecino", validarJWT, async (req, res) => {
     const {idvecino} = req.params;
     pool.query('SELECT * FROM vecino WHERE idvecino = $1', [idvecino],async (err, rows) => {
         if (!err) {
@@ -89,7 +90,7 @@ router.get("/vecino/:idvecino", async (req, res) => {
     });
 });
 
-router.delete("/vecino/:idvecino", async (req, res) => {
+router.delete("/vecino/:idvecino", validarJWT, async (req, res) => {
     const {idvecino} = req.params;
     pool.query("DELETE FROM vecino WHERE idvecino = $1", [idvecino], async (err, rows) => {
       if (!err) {
@@ -107,7 +108,7 @@ router.delete("/vecino/:idvecino", async (req, res) => {
     });
 });
 
-router.post("/vecino/actualizar/password", async (req, res) => {
+router.post("/vecino/actualizar/password", validarJWT, async (req, res) => {
     const { antiguaPassword, nuevaPassword, confirmarPassword, idvecino } = req.body;
     if (nuevaPassword !== confirmarPassword) {
         res.send({

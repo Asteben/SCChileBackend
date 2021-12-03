@@ -4,10 +4,11 @@ const moment = require('moment');
 const express = require("express");
 const router = express.Router();
 
+const { validarJWT } = require('../middlewares/validar-jwt');
 const pool = require('../database/config');
 
 
-router.post("/crearHito", async (req, res) => {
+router.post("/crearHito", validarJWT, async (req, res) => {
     const {idalarma, texto} = req.body;
     pool.query('INSERT INTO hito (alarma_idalarma, fecha, texto) VALUES ($1, $2, $3)', [idalarma , moment().format("YYYY-MM-DD HH:mm:ss"), texto],async (err, rows) => {
         if (!err) {
@@ -27,7 +28,7 @@ router.post("/crearHito", async (req, res) => {
     });
 });
 
-router.get("/getHitos", async (req, res) => {
+router.get("/getHitos", validarJWT, async (req, res) => {
     pool.query('SELECT * FROM hito',async (err, rows) => {
         if (!err) {
             res.send({
@@ -48,7 +49,7 @@ router.get("/getHitos", async (req, res) => {
 });
 
 
-router.get("/Hitos/:idalarma", async (req, res) => {
+router.get("/Hitos/:idalarma", validarJWT, async (req, res) => {
     const {idalarma} = req.params;
     pool.query('SELECT * FROM hito WHERE alarma_idalarma = $1', [idalarma],async (err, rows) => {
         if (!err) {

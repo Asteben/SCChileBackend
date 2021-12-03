@@ -4,9 +4,10 @@ const bcrypt = require('bcryptjs');
 const express = require("express");
 const router = express.Router();
 
+const { validarJWT } = require('../middlewares/validar-jwt');
 const pool = require('../database/config');
 
-router.post("/contacto/nuevo", async (req, res) => {
+router.post("/contacto/nuevo", validarJWT, async (req, res) => {
     const {idvecino, nombre, telefono} = req.body;
     let aux2 = 0;
     const aux = await pool.query('SELECT telefono FROM contacto WHERE telefono = ($1)', [telefono]);
@@ -53,7 +54,7 @@ router.post("/contacto/nuevo", async (req, res) => {
     }
 });
 
-router.post("/contacto/actualizar", async (req, res) => {
+router.post("/contacto/actualizar", validarJWT, async (req, res) => {
     const {telefono, nombre, telefononuevo} = req.body;
     pool.query('UPDATE contacto SET telefono = $1, nombre = $2 WHERE telefono = $3',[telefononuevo, nombre, telefono],async (err, rows) => {
         if (!err) {
@@ -73,7 +74,7 @@ router.post("/contacto/actualizar", async (req, res) => {
     });
 });
 
-router.get("/contacto/:idvecino", async (req, res) => {
+router.get("/contacto/:idvecino", validarJWT, async (req, res) => {
     const {idvecino} = req.params;
     pool.query('SELECT contacto.nombre, contacto.telefono FROM contacto INNER JOIN vecino_contacto ON contacto.telefono = vecino_contacto.contacto_telefono WHERE vecino_contacto.vecino_idvecino = $1', [idvecino],async (err, rows) => {
         if (!err) {
@@ -94,7 +95,7 @@ router.get("/contacto/:idvecino", async (req, res) => {
     });
 });
 
-router.delete("/contacto/:telefono", async (req, res) => {
+router.delete("/contacto/:telefono", validarJWT, async (req, res) => {
     const {telefono} = req.params;
     pool.query("DELETE FROM contacto WHERE telefono = $1", [telefono], async (err, rows) => {
       if (!err) {

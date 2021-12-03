@@ -42,9 +42,7 @@ router.post('/',async (req, res = response) => {
                     id,
                     token,
                     code: 200,
-                    message: "Guardia nuevo ingresado exitosamente",
                 });
-                console.log("Guardia nuevo ingresado exitosamente");
                 console.log(rows);
             } else {
                 res.send({
