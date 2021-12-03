@@ -8,8 +8,8 @@ const { validarJWT } = require('../middlewares/validar-jwt');
 const pool = require('../database/config');
 
 router.post("/guardia/actualizar", validarJWT, async (req, res) => {
-    const { direccion, telefono, idvecino} = req.body;
-    pool.query('UPDATE vecino SET direccion = $1, telefono = $2 WHERE idguardia = $3',[direccion, telefono, idvecino],async (err, rows) => {
+    const { direccion, telefono, rut, idvecino} = req.body;
+    pool.query('UPDATE vecino SET direccion = $1, telefono = $2, rut = $3 WHERE idguardia = $3',[direccion, telefono, rut, idvecino],async (err, rows) => {
         if (!err) {
             res.send({
                 code: 200,
