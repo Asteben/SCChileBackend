@@ -24,7 +24,7 @@ router.post("/crearEscolta", validarJWT, async (req, res) => {
         });
     }
     else{
-        pool.query('INSERT INTO escolta (vecino_idvecino, fecha, estado, direccion, modalidad, detalle) VALUES ($1, $2, $3, $4, $5, %6)', [idvecino , moment().format("YYYY-MM-DD HH:mm:ss"), 'activa', direccion, modalidad, detalle],async (err, rows) => {
+        pool.query('INSERT INTO escolta (vecino_idvecino, fecha, estado, direccion, modalidad, detalle) VALUES ($1, $2, $3, $4, $5, $6)', [idvecino , moment().format("YYYY-MM-DD HH:mm:ss"), 'activa', direccion, modalidad, detalle],async (err, rows) => {
             if (!err) {
                 res.send({
                     code: 200,
