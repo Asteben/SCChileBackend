@@ -145,7 +145,7 @@ router.post("/cancelarEscolta", validarJWT, async (req, res) => {
 
 router.get("/Escolta/:idvecino", validarJWT, async (req, res) => {
     const {idvecino} = req.params;
-    pool.query('SELECT * FROM escolta WHERE vecino_idvecino = $1', [idvecino],async (err, rows) => {
+    pool.query('SELECT * FROM escolta WHERE vecino_idvecino = $1 AND estado = $2', [idvecino, 'activa'],async (err, rows) => {
         if (!err) {
             res.send({
                 code: 200,
