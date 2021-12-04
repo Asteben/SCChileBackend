@@ -115,3 +115,6 @@ alter table logs
     references guardia(idguardia)
     on update CASCADE
     on delete NO ACTION;
+
+ALTER TABLE escolta
+ADD COLUMN detalle TEXT;
